@@ -9,10 +9,7 @@ fi
 
 free_mem=`cat /proc/meminfo | awk '$1=="MemFree:" {printf "%.f", $2/1024/1024 }'`
 arc_mem=`cat /proc/spl/kstat/zfs/arcstats | awk '$1=="size" {printf "%.f", $3/1024/1024/1024 }'`
-possible_free_mem=$(( $free_mem + $arc_mem ))
 
-echo "#Possible Free mem: **$possible_free_mem GB**  "
-echo "#"
 echo "#Running VM Reserved: **$running_mem GB**  "
 echo "#"
 awk '{printf "#%s  %.0f GB  \n" , $1 , $2=$2/1024^2}' /proc/meminfo | grep -v "0"
