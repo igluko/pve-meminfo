@@ -7,12 +7,13 @@ if [ -n "$running_vm" ]; then
   running_mem=`echo "$running_vm" | awk '{print $4}' | paste -sd+ | awk '{printf "scale=0;(%s)/1024\n", ($1) }' | bc`
 fi
 
-free_mem=`cat /proc/meminfo | awk '$1=="MemFree:" {printf "%.f", $2/1024/1024 }'`
+total_mem=`cat /proc/meminfo | awk '$1=="MemTotal:" {printf "%.f", $2/1024/1024 }'`
 arc_mem=`cat /proc/spl/kstat/zfs/arcstats | awk '$1=="size" {printf "%.f", $3/1024/1024/1024 }'`
 
-echo "#Running VM Reserved: **$running_mem GB**  "
+
+echo "#Total Mem: **$total_mem GB**  "
 echo "#"
-awk '{printf "#%s  %.0f GB  \n" , $1 , $2=$2/1024^2}' /proc/meminfo | grep -v "0"
+echo "#Running VM Reserved: **$running_mem GB**  "
 echo "#"
 awk '$1=="size" {printf "#ARC SIZE = **%.f GB** \n", $3/1024/1024/1024 }' /proc/spl/kstat/zfs/arcstats
 echo "#"
